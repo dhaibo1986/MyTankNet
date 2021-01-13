@@ -38,6 +38,8 @@ public class ServerFrame extends Frame {
 			Thread t = new Thread(() -> {
 				server.serverStart();
 			});
+			t.setDaemon(true);
+			t.start();
 		});
 	}
 

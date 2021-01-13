@@ -9,6 +9,11 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
+/**
+*@author
+*@description
+*@date  2021/1/13 15:36
+*/
 public class Server {
 
 	public static ChannelGroup clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
