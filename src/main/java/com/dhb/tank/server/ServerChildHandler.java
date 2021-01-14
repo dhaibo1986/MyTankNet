@@ -26,7 +26,8 @@ public class ServerChildHandler extends ChannelInboundHandlerAdapter {
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		ByteBuf buf = null;
+		Server.clients.writeAndFlush(msg);
+/*		ByteBuf buf = null;
 		if(msg instanceof ByteBuf) {
 			try {
 				buf = (ByteBuf) msg;
@@ -50,6 +51,6 @@ public class ServerChildHandler extends ChannelInboundHandlerAdapter {
 			} finally {
 
 			}
-		}
+		}*/
 	}
 }
