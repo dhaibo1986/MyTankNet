@@ -74,6 +74,8 @@ public class TankJoinMsg {
 			dos.writeInt(x);
 			dos.writeInt(y);
 			dos.writeInt(dir.ordinal());
+			dos.writeBoolean(moving);
+			dos.writeInt(group.ordinal());
 			dos.writeLong(id.getMostSignificantBits());
 			dos.writeLong(id.getLeastSignificantBits());
 			dos.flush();
@@ -109,5 +111,53 @@ public class TankJoinMsg {
 				", group=" + group +
 				", id=" + id +
 				'}';
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public Dir getDir() {
+		return dir;
+	}
+
+	public void setDir(Dir dir) {
+		this.dir = dir;
+	}
+
+	public boolean isMoving() {
+		return moving;
+	}
+
+	public void setMoving(boolean moving) {
+		this.moving = moving;
+	}
+
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
+	}
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
 	}
 }
