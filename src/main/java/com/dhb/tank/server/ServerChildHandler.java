@@ -1,6 +1,5 @@
 package com.dhb.tank.server;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -9,23 +8,26 @@ public class ServerChildHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		Server.clients.add(ctx.channel());
+		ServerFrame.INSTANCE.updateServerMsg("channel [" + ctx.name() + "] 连接到服务端。");
 	}
 
 	@Override
 	public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-		System.out.println("channel ["+ctx.name()+"] 连接关闭，被移除。");
-		ServerFrame.INSTANCE.updateServerMsg("channel ["+ctx.name()+"] 连接关闭，被移除。");
+		System.out.println("channel [" + ctx.name() + "] 连接关闭，被移除。");
+		ServerFrame.INSTANCE.updateServerMsg("channel [" + ctx.name() + "] 连接关闭，被移除。");
 	}
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		cause.printStackTrace();
+		ServerFrame.INSTANCE.updateServerMsg("channel [" + ctx.name() + "] 互相异常。" + cause.getMessage());
 		Server.clients.remove(ctx.channel());
 		ctx.close();
 	}
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+		ServerFrame.INSTANCE.updateClientMsg("channel [" + ctx.name() + "] 收到消息。" + msg.toString());
 		Server.clients.writeAndFlush(msg);
 /*		ByteBuf buf = null;
 		if(msg instanceof ByteBuf) {
