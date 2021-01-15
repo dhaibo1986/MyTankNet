@@ -1,5 +1,6 @@
 package com.dhb.tank.client;
 
+import com.dhb.tank.mode.TankJoinMsg;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -9,15 +10,18 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 
 public class Client {
 
+	public static final Client INSTANCE = new Client();
+
+	private Client() {
+
+	}
+
 	private Channel channel = null;
 
 	private Client client = null;
 
 	private EventLoopGroup group = null;
 
-	public static void main(String[] args) {
-
-	}
 
 	public void connect() {
 		group = new NioEventLoopGroup();
@@ -34,4 +38,8 @@ public class Client {
 
 	}
 
+
+	public void send(TankJoinMsg msg) {
+		channel.writeAndFlush(msg);
+	}
 }

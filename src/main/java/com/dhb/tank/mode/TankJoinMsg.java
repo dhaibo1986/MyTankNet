@@ -1,12 +1,14 @@
 package com.dhb.tank.mode;
 
+import com.dhb.tank.client.Client;
 import com.dhb.tank.comms.Dir;
 import com.dhb.tank.comms.Group;
+import com.dhb.tank.frame.TankFrame;
 
 import java.io.*;
 import java.util.UUID;
 
-public class TankJoinMsg {
+public class TankJoinMsg extends Msg{
 
 	//坐标 x
 	private int x;
@@ -63,6 +65,7 @@ public class TankJoinMsg {
 		}
 	}
 
+	@Override
 	public byte[] toBytes() {
 		ByteArrayOutputStream baos = null;
 		DataOutputStream dos = null;
@@ -159,5 +162,18 @@ public class TankJoinMsg {
 
 	public void setId(UUID id) {
 		this.id = id;
+	}
+
+	@Override
+	public void handle() {
+		if(this.getId().equals(TankFrame.INSTANCE.getMainTank().getId())||
+				TankFrame.INSTANCE.findByUUID(this.getId()) != null) {
+			return;
+		}
+		System.out.println(this);
+		Tank t = new Tank(this);
+		TankFrame.INSTANCE.addTank(t);
+
+		Client.INSTANCE.send(this);
 	}
 }

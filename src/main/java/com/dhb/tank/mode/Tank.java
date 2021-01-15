@@ -26,7 +26,7 @@ public class Tank extends GameObject{
 	//方向
 	private Dir dir = Dir.DOWN;
 	//静止or移动状态
-	private boolean moving = true;
+	private boolean moving = false;
 	//敌我分组
 	private Group group;
 	//标识 uuid
