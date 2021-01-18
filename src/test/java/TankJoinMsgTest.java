@@ -2,6 +2,7 @@ import com.dhb.tank.coders.TankJoinMsgDecoder;
 import com.dhb.tank.coders.TankJoinMsgEncoder;
 import com.dhb.tank.comms.Dir;
 import com.dhb.tank.comms.Group;
+import com.dhb.tank.mode.MsgType;
 import com.dhb.tank.mode.TankJoinMsg;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -23,6 +24,11 @@ public class TankJoinMsgTest {
 		ch.writeOutbound(msg);
 
 		ByteBuf buf = (ByteBuf) ch.readOutbound();
+		MsgType msgType = MsgType.values()[buf.readInt()];
+		Assertions.assertEquals(MsgType.TankJoin,msgType);
+
+		int length = buf.readInt();
+		Assertions.assertEquals(33,length);
 
 		int x = buf.readInt();
 		int y = buf.readInt();
@@ -49,7 +55,10 @@ public class TankJoinMsgTest {
 		ch.pipeline()
 				.addLast(new TankJoinMsgDecoder());
 		ByteBuf buf = Unpooled.buffer();
-		buf.writeBytes(msg.toBytes());
+		buf.writeInt(MsgType.TankJoin.ordinal());
+		byte[] bytes = msg.toBytes();
+		buf.writeInt(bytes.length);
+		buf.writeBytes(bytes);
 
 		ByteBuf dbuf = buf.duplicate();
 		ch.writeInbound(dbuf);
