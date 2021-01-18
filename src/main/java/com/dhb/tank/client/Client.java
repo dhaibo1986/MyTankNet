@@ -1,5 +1,6 @@
 package com.dhb.tank.client;
 
+import com.dhb.tank.mode.Msg;
 import com.dhb.tank.mode.TankJoinMsg;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -39,7 +40,7 @@ public class Client {
 	}
 
 
-	public void send(TankJoinMsg msg) {
+	public void send(Msg msg) {
 		channel.writeAndFlush(msg);
 	}
 }
