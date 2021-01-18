@@ -45,6 +45,7 @@ public class TankJoinMsg extends Msg{
 
 	}
 
+	@Override
 	public void parse(byte[] bytes) {
 		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(bytes));
 		try {
@@ -114,6 +115,11 @@ public class TankJoinMsg extends Msg{
 				", group=" + group +
 				", id=" + id +
 				'}';
+	}
+
+	@Override
+	public MsgType getMsgType() {
+		return MsgType.TankJoin;
 	}
 
 	public int getX() {
