@@ -1,7 +1,9 @@
 package com.dhb.tank.frame;
 
+import com.dhb.tank.client.Client;
 import com.dhb.tank.comms.Dir;
 import com.dhb.tank.mode.Tank;
+import com.dhb.tank.mode.TankStartMovingMsg;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -83,7 +85,7 @@ public class MyKeyListener extends KeyAdapter {
 			if (BD) {
 				myTank.setDir(Dir.DOWN);
 			}
-
+			Client.INSTANCE.send(new TankStartMovingMsg(myTank));
 		}
 	}
 }
