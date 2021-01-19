@@ -2,6 +2,7 @@ package com.dhb.tank.coders;
 
 import com.dhb.tank.mode.MsgType;
 import com.dhb.tank.mode.TankJoinMsg;
+import com.dhb.tank.mode.TankStartMovingMsg;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -12,7 +13,7 @@ public class TankMsgDecoder extends ByteToMessageDecoder {
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-		//需要确认每个消息的长度 现在是33个字节
+		//需要确认每个消息的长度
 		if (in.readableBytes() < 8) {
 			return;
 		}
@@ -28,11 +29,15 @@ public class TankMsgDecoder extends ByteToMessageDecoder {
 
 		switch (msgType) {
 			case TankJoin:
-				TankJoinMsg msg = new TankJoinMsg();
-				msg.parse(bytes);
-				out.add(msg);
+				TankJoinMsg joinMsg = new TankJoinMsg();
+				joinMsg.parse(bytes);
+				out.add(joinMsg);
 				break;
-
+			case TankStartMoving:
+				TankStartMovingMsg startMovingMsg = new TankStartMovingMsg();
+				startMovingMsg.parse(bytes);
+				out.add(startMovingMsg);
+				break;
 			default:
 				break;
 		}
