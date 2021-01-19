@@ -31,6 +31,7 @@ public class Client {
 			ChannelFuture f = b.group(group).channel(NioSocketChannel.class)
 					.handler(new ClientChannelInitializer())
 					.connect("localhost", 8888);
+			channel = f.channel();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
