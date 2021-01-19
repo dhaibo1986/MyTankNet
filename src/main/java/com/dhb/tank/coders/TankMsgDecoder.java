@@ -29,9 +29,14 @@ public class TankMsgDecoder extends ByteToMessageDecoder {
 		byte[] bytes = new byte[length];
 		in.readBytes(bytes);
 
+		Msg msg = null;
+		//此处可用反射替换
+//			msg = (Msg) Class.forName(msgType.toString()+"Msg").newInstance();
+
+
 		switch (msgType) {
 			case TankJoin:
-				Msg msg = new TankJoinMsg();
+				msg = new TankJoinMsg();
 				msg.parse(bytes);
 				out.add(msg);
 				break;
