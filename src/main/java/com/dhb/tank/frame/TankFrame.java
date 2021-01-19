@@ -30,7 +30,7 @@ public class TankFrame extends Frame {
 	Map<UUID, Tank> tanks = new HashMap<>();
 	List<Explode> explodes = new ArrayList<>();
 	Image offScreenImage = null;
-	private Tank myTank = new Tank(r.nextInt(1000), r.nextInt(800), Dir.DOWN, true, Group.GOOD, this);
+	private Tank myTank = new Tank(r.nextInt(1000), r.nextInt(800), Dir.DOWN, false, Group.GOOD, this);
 
 	private TankFrame() {
 		setSize(GAME_WIDTH, GAME_HEIGHT);
