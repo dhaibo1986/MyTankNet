@@ -1,5 +1,7 @@
 package com.dhb.tank.server;
 
+import com.dhb.tank.coders.TankMsgDecoder;
+import com.dhb.tank.coders.TankMsgEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.group.ChannelGroup;
@@ -55,7 +57,10 @@ public class Server {
 						@Override
 						protected void initChannel(SocketChannel ch) throws Exception {
 							ChannelPipeline pipeline = ch.pipeline();
-							pipeline.addLast(new ServerChildHandler());
+							pipeline.addLast(new TankMsgDecoder())
+									.addLast(new TankMsgEncoder())
+									.addLast(new ServerChildHandler());
+
 						}
 					})
 					.bind(8888)

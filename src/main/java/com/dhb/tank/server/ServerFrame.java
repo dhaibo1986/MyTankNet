@@ -57,7 +57,7 @@ public class ServerFrame extends Frame {
 	}
 
 	public void updateClientMsg(String msg) {
-		this.taRight.setText(taLeft.getText() + Constants.LINE_SEP + msg);
+		this.taRight.setText(taRight.getText() + Constants.LINE_SEP + msg);
 	}
 
 }
