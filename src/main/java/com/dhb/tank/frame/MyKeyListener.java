@@ -4,6 +4,7 @@ import com.dhb.tank.client.Client;
 import com.dhb.tank.comms.Dir;
 import com.dhb.tank.mode.Tank;
 import com.dhb.tank.mode.TankStartMovingMsg;
+import com.dhb.tank.mode.TankStopMsg;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -71,6 +72,7 @@ public class MyKeyListener extends KeyAdapter {
 		Tank myTank = TankFrame.INSTANCE.getMainTank();
 		if (!BL && !BR && !BU && !BD) {
 			myTank.setMoving(false);
+			Client.INSTANCE.send(new TankStopMsg(myTank));
 		} else {
 			myTank.setMoving(true);
 			if (BL) {
