@@ -74,7 +74,6 @@ public class MyKeyListener extends KeyAdapter {
 			myTank.setMoving(false);
 			Client.INSTANCE.send(new TankStopMsg(myTank));
 		} else {
-			myTank.setMoving(true);
 			if (BL) {
 				myTank.setDir(Dir.LEFT);
 			}
@@ -87,7 +86,10 @@ public class MyKeyListener extends KeyAdapter {
 			if (BD) {
 				myTank.setDir(Dir.DOWN);
 			}
-			Client.INSTANCE.send(new TankStartMovingMsg(myTank));
+			if(!myTank.isMoving()) {
+				Client.INSTANCE.send(new TankStartMovingMsg(myTank));
+			}
+			myTank.setMoving(true);
 		}
 	}
 }
