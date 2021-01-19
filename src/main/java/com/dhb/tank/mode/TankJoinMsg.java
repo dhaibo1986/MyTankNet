@@ -179,7 +179,6 @@ public class TankJoinMsg extends Msg{
 		System.out.println(this);
 		Tank t = new Tank(this);
 		TankFrame.INSTANCE.addTank(t);
-
-		Client.INSTANCE.send(this);
+		Client.INSTANCE.send(new TankJoinMsg(TankFrame.INSTANCE.getMainTank()));
 	}
 }
