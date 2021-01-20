@@ -29,6 +29,18 @@ public class Bullet extends GameObject {
 		TankFrame.INSTANCE.addBullet(this);
 	}
 
+	public Bullet(Tank t) {
+		this.x = t.getX();
+		this.y = t.getY();
+		this.dir = t.getDir();
+		this.group = t.getGroup();
+		rect.x = this.x;
+		rect.y = this.y;
+		rect.width = WIDTH;
+		rect.height = HEIGHT;
+		TankFrame.INSTANCE.addBullet(this);
+	}
+
 	public static int getSPEED() {
 		return SPEED;
 	}
