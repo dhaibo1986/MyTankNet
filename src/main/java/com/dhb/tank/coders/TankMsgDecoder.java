@@ -1,7 +1,10 @@
 package com.dhb.tank.coders;
 
+import com.dhb.tank.mode.BulletNewMsg;
 import com.dhb.tank.mode.Msg;
 import com.dhb.tank.mode.MsgType;
+import com.dhb.tank.mode.TankDieMsg;
+import com.dhb.tank.mode.TankDirChangedMsg;
 import com.dhb.tank.mode.TankJoinMsg;
 import com.dhb.tank.mode.TankStartMovingMsg;
 import com.dhb.tank.mode.TankStopMsg;
@@ -47,6 +50,21 @@ public class TankMsgDecoder extends ByteToMessageDecoder {
 				break;
 			case TankStop:
 				msg = new TankStopMsg();
+				msg.parse(bytes);
+				out.add(msg);
+				break;
+			case TankDirChanged:
+				msg = new TankDirChangedMsg();
+				msg.parse(bytes);
+				out.add(msg);
+				break;
+			case BulletNew:
+				msg = new BulletNewMsg();
+				msg.parse(bytes);
+				out.add(msg);
+				break;
+			case TankDie:
+				msg = new TankDieMsg();
 				msg.parse(bytes);
 				out.add(msg);
 				break;
