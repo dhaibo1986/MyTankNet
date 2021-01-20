@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 import java.awt.event.WindowAdapter;
@@ -112,8 +113,9 @@ public class TankFrame extends Frame {
 		}
 
 		for (int i = 0; i < bullets.size(); i++) {
-			for (int j = 0; j < tanks.size(); j++) {
-				bullets.get(i).collideWith(tanks.get(j));
+			Object[] keys = tanks.keySet().toArray();
+			for (int j = 0; j < keys.length; j++) {
+				bullets.get(i).collideWith(tanks.get((UUID) keys[j]));
 			}
 		}
 	}
