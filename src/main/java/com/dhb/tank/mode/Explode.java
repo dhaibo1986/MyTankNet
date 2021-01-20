@@ -24,6 +24,13 @@ public class Explode extends GameObject {
 		TankFrame.INSTANCE.addExplode(this);
 	}
 
+	public Explode(Tank t) {
+		this.x = t.getX();
+		this.y = t.getY();
+		this.living = t.isLiving();
+		TankFrame.INSTANCE.addExplode(this);
+	}
+
 	@Override
 	public int getWidth() {
 		return WIDTH;
