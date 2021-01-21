@@ -17,26 +17,38 @@ public class BulletNewMsg extends Msg{
 	private int y;
 	private Dir dir;
 	private Group group;
+	private UUID tankId;
 	private UUID id;
 
-	public BulletNewMsg(int x, int y, Dir dir, Group group, UUID id) {
+	public BulletNewMsg(int x, int y, Dir dir, Group group, UUID tankId,UUID id) {
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
 		this.group = group;
+		this.tankId = tankId;
 		this.id = id;
 	}
 
-	public BulletNewMsg(Tank t) {
-		this.x = t.getX();
-		this.y = t.getY();
-		this.dir = t.getDir();
-		this.group = t.getGroup();
-		this.id = t.getId();
+	public BulletNewMsg(Bullet b) {
+		this.x = b.getX();
+		this.y = b.getY();
+		this.dir = b.getDir();
+		this.group = b.getGroup();
+		this.tankId = b.getTankId();
+		this.id = b.getId();
 	}
+
 
 	public BulletNewMsg() {
 
+	}
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
 	}
 
 	public int getX() {
@@ -71,12 +83,12 @@ public class BulletNewMsg extends Msg{
 		this.group = group;
 	}
 
-	public UUID getId() {
-		return id;
+	public UUID getTankId() {
+		return tankId;
 	}
 
-	public void setId(UUID id) {
-		this.id = id;
+	public void setTankId(UUID tankId) {
+		this.tankId = tankId;
 	}
 
 	@Override
@@ -86,22 +98,19 @@ public class BulletNewMsg extends Msg{
 				", y=" + y +
 				", dir=" + dir +
 				", group=" + group +
+				", tankId=" + tankId +
 				", id=" + id +
 				'}';
 	}
 
 	@Override
 	public void handle() {
-		if (this.id.equals(TankFrame.INSTANCE.getMainTank().getId())) {
+		if (this.tankId.equals(TankFrame.INSTANCE.getMainTank().getId())) {
 			return;
 		}
-		Tank t = TankFrame.INSTANCE.findByUUID(this.id);
-		if (t != null) {
-			t.setX(this.x);
-			t.setY(this.y);
-			t.setDir(this.dir);
-			TankFrame.INSTANCE.addBullet(new Bullet(t));
-		}
+		Bullet b =new Bullet(this.x,this.y,this.dir,this.group,this.tankId,TankFrame.INSTANCE);
+		b.setId(this.id);
+		TankFrame.INSTANCE.addBullet(b);
 	}
 
 	@Override
@@ -117,6 +126,8 @@ public class BulletNewMsg extends Msg{
 			dos.writeInt(y);
 			dos.writeInt(dir.ordinal());
 			dos.writeInt(group.ordinal());
+			dos.writeLong(tankId.getMostSignificantBits());
+			dos.writeLong(tankId.getLeastSignificantBits());
 			dos.writeLong(id.getMostSignificantBits());
 			dos.writeLong(id.getLeastSignificantBits());
 			dos.flush();
@@ -150,7 +161,8 @@ public class BulletNewMsg extends Msg{
 			this.y = dis.readInt();
 			this.dir = Dir.values()[dis.readInt()];
 			this.group = Group.values()[dis.readInt()];
-			this.id = new UUID(dis.readLong(), dis.readLong());
+			this.tankId = new UUID(dis.readLong(), dis.readLong());
+			this.id =  new UUID(dis.readLong(), dis.readLong());
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

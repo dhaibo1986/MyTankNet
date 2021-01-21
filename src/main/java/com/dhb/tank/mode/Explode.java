@@ -6,6 +6,8 @@ import com.dhb.tank.frame.TankFrame;
 import java.awt.*;
 
 public class Explode extends GameObject {
+	private int x;
+	private int y;
 
 	public static int WIDTH = ResourseMgr.getInstance().getExplodes()[0].getWidth();
 
@@ -80,5 +82,21 @@ public class Explode extends GameObject {
 
 	public void setStep(int step) {
 		this.step = step;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
 	}
 }

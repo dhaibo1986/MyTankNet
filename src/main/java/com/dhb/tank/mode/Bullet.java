@@ -1,11 +1,13 @@
 package com.dhb.tank.mode;
 
+import com.dhb.tank.client.Client;
 import com.dhb.tank.comms.Dir;
 import com.dhb.tank.comms.Group;
 import com.dhb.tank.comms.ResourseMgr;
 import com.dhb.tank.frame.TankFrame;
 
 import java.awt.*;
+import java.util.UUID;
 
 public class Bullet extends GameObject {
 
@@ -13,36 +15,39 @@ public class Bullet extends GameObject {
 	public static final int WIDTH = ResourseMgr.getInstance().getBulletD().getWidth(),
 			HEIGHT = ResourseMgr.getInstance().getBulletD().getHeight();
 	Rectangle rect = new Rectangle();
+	private int x, y;
+	private UUID tankId;
+	private UUID id = UUID.randomUUID();
 	private Dir dir;
 	private Group group = Group.BAD;
 	private boolean living = true;
 
-	public Bullet(int x, int y, Dir dir, Group group) {
+	private TankFrame tf;
+
+	public Bullet(int x, int y, Dir dir, Group group, UUID tankId, TankFrame tf) {
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
 		this.group = group;
-		rect.x = this.x;
-		rect.y = this.y;
-		rect.width = WIDTH;
-		rect.height = HEIGHT;
-		TankFrame.INSTANCE.addBullet(this);
-	}
+		this.tankId = tankId;
+		this.tf = tf;
 
-	public Bullet(Tank t) {
-		this.x = t.getX();
-		this.y = t.getY();
-		this.dir = t.getDir();
-		this.group = t.getGroup();
 		rect.x = this.x;
 		rect.y = this.y;
 		rect.width = WIDTH;
 		rect.height = HEIGHT;
-		TankFrame.INSTANCE.addBullet(this);
 	}
 
 	public static int getSPEED() {
 		return SPEED;
+	}
+
+	public static int getWIDTH() {
+		return WIDTH;
+	}
+
+	public static int getHEIGHT() {
+		return HEIGHT;
 	}
 
 	public void die() {
@@ -58,6 +63,14 @@ public class Bullet extends GameObject {
 		this.rect = rect;
 	}
 
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
 	@Override
 	public int getWidth() {
 		return WIDTH;
@@ -70,6 +83,9 @@ public class Bullet extends GameObject {
 
 	@Override
 	public void paint(Graphics g) {
+		if (!living) {
+			tf.getBullets().remove(this);
+		}
 		switch (dir) {
 			case LEFT:
 				g.drawImage(ResourseMgr.getInstance().getBulletL(), x, y, null);
@@ -119,25 +135,20 @@ public class Bullet extends GameObject {
 	}
 
 	public void collideWith(Tank tank) {
-		if (this.group == tank.getGroup()) {
+		if (this.tankId.equals(tank.getId())) {
 			return;
 		}
-		if (this.rect.intersects(tank.getRect())) {
+		System.out.println("collideWith bullet is [" + this.getId() + "]  bulletTank is [" + this.tankId + "] tank is [" + tank.getId() + "]!!");
+
+		if (this.living && tank.isLiving() && this.rect.intersects(tank.getRect())) {
 			tank.die();
 			this.die();
 			int eX = tank.getX() + Tank.WIDTH / 2 - Explode.WIDTH / 2;
 			int eY = tank.getY() + Tank.HEIGHT / 2 - Explode.HEIGHT / 2;
 			//重构之后，将add方法放到构造函数中，从而降低耦合
 			new Explode(eX, eY, true);
+			Client.INSTANCE.send(new TankDieMsg(this.id, tank.getId()));
 		}
-	}
-
-	public static int getWIDTH() {
-		return WIDTH;
-	}
-
-	public static int getHEIGHT() {
-		return HEIGHT;
 	}
 
 	public Dir getDir() {
@@ -162,5 +173,29 @@ public class Bullet extends GameObject {
 
 	public void setLiving(boolean living) {
 		this.living = living;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public UUID getTankId() {
+		return tankId;
+	}
+
+	public void setTankId(UUID tankId) {
+		this.tankId = tankId;
 	}
 }
