@@ -1,5 +1,7 @@
 package com.dhb.tank.server;
 
+import com.dhb.tank.mode.Msg;
+import com.dhb.tank.mode.TankExitMsg;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -28,7 +30,17 @@ public class ServerChildHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		ServerFrame.INSTANCE.updateClientMsg("channel [" + ctx.name() + "] 收到消息。" + msg.toString());
+		//发现有客户端退出
+		if(msg instanceof TankExitMsg) {
+			TankExitMsg extMsg = (TankExitMsg) msg;
+			Server.clients.remove(ctx.channel());
+			ctx.close();
+			ServerFrame.INSTANCE.updateServerMsg("服务端关闭需要退出的连接：channel:["+ctx.name()+"] id:["+extMsg.getId()+"]");
+		}
+		//转发消息到其他客户端
 		Server.clients.writeAndFlush(msg);
+
+
 /*		ByteBuf buf = null;
 		if(msg instanceof ByteBuf) {
 			try {
