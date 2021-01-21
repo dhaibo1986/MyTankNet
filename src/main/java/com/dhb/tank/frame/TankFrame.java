@@ -1,23 +1,20 @@
 package com.dhb.tank.frame;
 
-import com.dhb.tank.comms.*;
+import com.dhb.tank.comms.Dir;
+import com.dhb.tank.comms.Group;
 import com.dhb.tank.mode.Bullet;
 import com.dhb.tank.mode.Explode;
 import com.dhb.tank.mode.Tank;
 
-
-
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 import java.util.UUID;
-
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.*;
 
 public class TankFrame extends Frame {
 
@@ -62,7 +59,7 @@ public class TankFrame extends Frame {
 		bullets.add(b);
 	}
 
-	public void removeBullet(Bullet b){
+	public void removeBullet(Bullet b) {
 		bullets.remove(b);
 	}
 
@@ -83,8 +80,8 @@ public class TankFrame extends Frame {
 	}
 
 	public Bullet findBulletByUUID(UUID id) {
-		for(int i=0;i<bullets.size();i++) {
-			if(bullets.get(i).getId().equals(id)) {
+		for (int i = 0; i < bullets.size(); i++) {
+			if (bullets.get(i).getId().equals(id)) {
 				return bullets.get(i);
 			}
 		}
@@ -124,7 +121,7 @@ public class TankFrame extends Frame {
 		Tank t;
 		for (int i = 0; i < keys.length; i++) {
 			t = tanks.get((UUID) keys[i]);
-			if(null != t) {
+			if (null != t) {
 				t.paint(g);
 			}
 		}
