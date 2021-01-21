@@ -5,6 +5,7 @@ import com.dhb.tank.mode.Msg;
 import com.dhb.tank.mode.MsgType;
 import com.dhb.tank.mode.TankDieMsg;
 import com.dhb.tank.mode.TankDirChangedMsg;
+import com.dhb.tank.mode.TankExitMsg;
 import com.dhb.tank.mode.TankJoinMsg;
 import com.dhb.tank.mode.TankStartMovingMsg;
 import com.dhb.tank.mode.TankStopMsg;
@@ -65,6 +66,11 @@ public class TankMsgDecoder extends ByteToMessageDecoder {
 				break;
 			case TankDie:
 				msg = new TankDieMsg();
+				msg.parse(bytes);
+				out.add(msg);
+				break;
+			case TankExit:
+				msg = new TankExitMsg();
 				msg.parse(bytes);
 				out.add(msg);
 				break;
