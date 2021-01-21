@@ -18,7 +18,8 @@ public class BulletNewMsgTest {
 	void testEncoder() {
 		EmbeddedChannel ch = new EmbeddedChannel();
 		UUID id = UUID.randomUUID();
-		BulletNewMsg msg = new BulletNewMsg(5, 10, Dir.DOWN, Group.GOOD, id);
+		UUID tankId = UUID.randomUUID();
+		BulletNewMsg msg = new BulletNewMsg(5, 10, Dir.DOWN, Group.GOOD, tankId,id);
 		ch.pipeline()
 				.addLast(new TankMsgEncoder());
 		ch.writeOutbound(msg);
@@ -29,7 +30,7 @@ public class BulletNewMsgTest {
 		Assertions.assertEquals(MsgType.BulletNew, msgType);
 
 		int length = buf.readInt();
-		Assertions.assertEquals(32, length);
+		Assertions.assertEquals(48, length);
 
 		int x = buf.readInt();
 		int y = buf.readInt();
@@ -37,12 +38,14 @@ public class BulletNewMsgTest {
 		Dir dir = Dir.values()[dirOrdinal];
 		int groupOrdinal = buf.readInt();
 		Group group = Group.values()[groupOrdinal];
-		UUID uuid = new UUID(buf.readLong(), buf.readLong());
+		UUID tankUuid = new UUID(buf.readLong(), buf.readLong());
+		UUID  uuid = new UUID(buf.readLong(), buf.readLong());
 
 		Assertions.assertEquals(5, x);
 		Assertions.assertEquals(10, y);
 		Assertions.assertEquals(Dir.DOWN, dir);
 		Assertions.assertEquals(Group.GOOD, group);
+		Assertions.assertEquals(tankId, tankUuid);
 		Assertions.assertEquals(id, uuid);
 	}
 
@@ -50,7 +53,8 @@ public class BulletNewMsgTest {
 	void testDecoder() {
 		EmbeddedChannel ch = new EmbeddedChannel();
 		UUID id = UUID.randomUUID();
-		BulletNewMsg msg = new BulletNewMsg(5, 10, Dir.DOWN, Group.GOOD, id);
+		UUID tankId = UUID.randomUUID();
+		BulletNewMsg msg = new BulletNewMsg(5, 10, Dir.DOWN, Group.GOOD, tankId,id);
 		ch.pipeline()
 				.addLast(new TankMsgDecoder());
 		ByteBuf buf = Unpooled.buffer();
@@ -67,6 +71,7 @@ public class BulletNewMsgTest {
 		Assertions.assertEquals(msg.getY(), msgR.getY());
 		Assertions.assertEquals(msg.getDir(), msgR.getDir());
 		Assertions.assertEquals(msg.getGroup(), msgR.getGroup());
+		Assertions.assertEquals(msg.getTankId(), msgR.getTankId());
 		Assertions.assertEquals(msg.getId(), msgR.getId());
 	}
 }
