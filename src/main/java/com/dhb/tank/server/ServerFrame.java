@@ -53,11 +53,21 @@ public class ServerFrame extends Frame {
 	}
 
 	public void updateServerMsg(String msg) {
-		this.taLeft.setText(this.taLeft.getText() + Constants.LINE_SEP + msg);
+		String str = taLeft.getText();
+		if(!"".equals(str)) {
+			this.taLeft.setText(taLeft.getText() + Constants.LINE_SEP + msg);
+		}else {
+			this.taLeft.setText(msg);
+		}
 	}
 
 	public void updateClientMsg(String msg) {
-		this.taRight.setText(taRight.getText() + Constants.LINE_SEP + msg);
+		String str = taRight.getText();
+		if(!"".equals(str)) {
+			this.taRight.setText(taRight.getText() + Constants.LINE_SEP + msg);
+		}else {
+			this.taRight.setText(msg);
+		}
 	}
 
 }
