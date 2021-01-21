@@ -1,10 +1,13 @@
 package com.dhb.tank.frame;
 
+import com.dhb.tank.client.Client;
 import com.dhb.tank.comms.Dir;
 import com.dhb.tank.comms.Group;
 import com.dhb.tank.mode.Bullet;
 import com.dhb.tank.mode.Explode;
 import com.dhb.tank.mode.Tank;
+import com.dhb.tank.mode.TankDieMsg;
+import com.dhb.tank.mode.TankExitMsg;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -38,6 +41,10 @@ public class TankFrame extends Frame {
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
+				//发退出消息
+				Client.INSTANCE.send(new TankExitMsg(myTank));
+				//断开连接并回收客户端资源
+				Client.INSTANCE.stop();
 				System.exit(0);
 			}
 		});
