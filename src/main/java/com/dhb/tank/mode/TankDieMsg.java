@@ -1,6 +1,5 @@
 package com.dhb.tank.mode;
 
-import com.dhb.tank.comms.Dir;
 import com.dhb.tank.frame.TankFrame;
 
 import java.io.ByteArrayInputStream;
@@ -10,13 +9,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
-public class TankDieMsg extends Msg{
+public class TankDieMsg extends Msg {
 
 	private UUID id;
 	//被谁击中
 	private UUID bulledId;
 
-	public TankDieMsg(UUID id,UUID bulledId) {
+	public TankDieMsg(UUID id, UUID bulledId) {
 		this.id = id;
 		this.bulledId = bulledId;
 	}
@@ -33,7 +32,6 @@ public class TankDieMsg extends Msg{
 	public void setBulledId(UUID bulledId) {
 		this.bulledId = bulledId;
 	}
-
 
 
 	public UUID getId() {
@@ -106,7 +104,7 @@ public class TankDieMsg extends Msg{
 		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(bytes));
 		try {
 			this.id = new UUID(dis.readLong(), dis.readLong());
-			this.bulledId = new UUID(dis.readLong(),dis.readLong());
+			this.bulledId = new UUID(dis.readLong(), dis.readLong());
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
