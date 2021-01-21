@@ -138,7 +138,7 @@ public class Bullet extends GameObject {
 		if (this.tankId.equals(tank.getId())) {
 			return;
 		}
-		System.out.println("collideWith bullet is [" + this.getId() + "]  bulletTank is [" + this.tankId + "] tank is [" + tank.getId() + "]!!");
+//		System.out.println("collideWith bullet is [" + this.getId() + "]  bulletTank is [" + this.tankId + "] tank is [" + tank.getId() + "]!!");
 
 		if (this.living && tank.isLiving() && this.rect.intersects(tank.getRect())) {
 			tank.die();
