@@ -2,6 +2,7 @@ package com.dhb.tank.frame;
 
 import com.dhb.tank.client.Client;
 import com.dhb.tank.comms.Dir;
+import com.dhb.tank.mode.Bullet;
 import com.dhb.tank.mode.BulletNewMsg;
 import com.dhb.tank.mode.Tank;
 import com.dhb.tank.mode.TankStartMovingMsg;
@@ -46,6 +47,9 @@ public class MyKeyListener extends KeyAdapter {
 	@Override
 	public void keyReleased(KeyEvent e) {
 		Tank myTank = TankFrame.INSTANCE.getMainTank();
+		if(!myTank.isLiving()){
+			return;
+		}
 		int key = e.getExtendedKeyCode();
 		switch (key) {
 			case KeyEvent.VK_LEFT:
@@ -63,7 +67,6 @@ public class MyKeyListener extends KeyAdapter {
 
 			case KeyEvent.VK_CONTROL:
 				TankFrame.INSTANCE.getMainTank().fire();
-				Client.INSTANCE.send(new BulletNewMsg(myTank));
 				break;
 			default:
 				break;
@@ -73,6 +76,9 @@ public class MyKeyListener extends KeyAdapter {
 
 	private void setMainTankDir() {
 		Tank myTank = TankFrame.INSTANCE.getMainTank();
+		if(!myTank.isLiving()){
+			return;
+		}
 		if (!BL && !BR && !BU && !BD) {
 			myTank.setMoving(false);
 			Client.INSTANCE.send(new TankStopMsg(myTank));

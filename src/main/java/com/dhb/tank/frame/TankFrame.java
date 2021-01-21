@@ -46,6 +46,10 @@ public class TankFrame extends Frame {
 		});
 	}
 
+	public List<Bullet> getBullets() {
+		return bullets;
+	}
+
 	public void addTank(Tank t) {
 		tanks.put(t.getId(), t);
 	}
@@ -70,12 +74,21 @@ public class TankFrame extends Frame {
 		explodes.remove(e);
 	}
 
-	public Tank findByUUID(UUID id) {
+	public Tank findTankByUUID(UUID id) {
 		return tanks.get(id);
 	}
 
 	public Tank getMainTank() {
 		return myTank;
+	}
+
+	public Bullet findBulletByUUID(UUID id) {
+		for(int i=0;i<bullets.size();i++) {
+			if(bullets.get(i).getId().equals(id)) {
+				return bullets.get(i);
+			}
+		}
+		return null;
 	}
 
 	@Override
@@ -101,21 +114,32 @@ public class TankFrame extends Frame {
 		g.drawString("explodes" + explodes.size(), 10, 100);
 		g.setColor(c);
 
-		myTank.paint(g);
+//		myTank.paint(g);
 		for (int i = 0; i < bullets.size(); i++) {
 			bullets.get(i).paint(g);
 		}
 
-		tanks.values().stream().forEach((e) -> e.paint(g));
+
+		Object[] keys = tanks.keySet().toArray();
+		Tank t;
+		for (int i = 0; i < keys.length; i++) {
+			t = tanks.get((UUID) keys[i]);
+			if(null != t) {
+				t.paint(g);
+			}
+		}
 
 		for (int i = 0; i < explodes.size(); i++) {
 			explodes.get(i).paint(g);
 		}
 
+		Bullet b;
 		for (int i = 0; i < bullets.size(); i++) {
-			Object[] keys = tanks.keySet().toArray();
+			keys = tanks.keySet().toArray();
+			b = bullets.get(i);
 			for (int j = 0; j < keys.length; j++) {
-				bullets.get(i).collideWith(tanks.get((UUID) keys[j]));
+				t = tanks.get((UUID) keys[j]);
+				b.collideWith(t);
 			}
 		}
 	}
