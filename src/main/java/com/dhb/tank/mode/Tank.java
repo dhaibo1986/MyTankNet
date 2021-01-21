@@ -1,5 +1,6 @@
 package com.dhb.tank.mode;
 
+import com.dhb.tank.client.Client;
 import com.dhb.tank.comms.*;
 import com.dhb.tank.frame.TankFrame;
 
@@ -43,6 +44,12 @@ public class Tank extends GameObject{
 		this.moving = moving;
 		this.group = group;
 		this.tf = tf;
+		tf.addTank(this);
+
+		rect.x = this.x;
+		rect.y = this.y;
+		rect.width = WIDTH;
+		rect.height = HEIGHT;
 	}
 
 	public Tank(TankJoinMsg msg) {
@@ -52,6 +59,12 @@ public class Tank extends GameObject{
 		this.moving = msg.isMoving();
 		this.group = msg.getGroup();
 		this.id = msg.getId();
+		TankFrame.INSTANCE.addTank(this);
+
+		rect.x = this.x;
+		rect.y = this.y;
+		rect.width = WIDTH;
+		rect.height = HEIGHT;
 	}
 
 	public Tank() {
@@ -180,8 +193,10 @@ public class Tank extends GameObject{
 	public void fire() {
 		int bX = this.getX() + Tank.WIDTH / 2 - Bullet.WIDTH / 2;
 		int bY = this.getY() + Tank.HEIGHT / 2 - Bullet.HEIGHT / 2;
-//		new RectDecorator(new TailDecorator(new Bullet(bX, bY, t.getDir(), t.getGroup())));
-		new Bullet(bX, bY, this.getDir(), this.getGroup());
+
+		Bullet b = new Bullet(bX, bY, this.getDir(), this.getGroup(),this.id,TankFrame.INSTANCE);
+		TankFrame.INSTANCE.addBullet(b);
+		Client.INSTANCE.send(new BulletNewMsg(b));
 		if (this.getGroup() == Group.GOOD) {
 			new Thread(() -> {
 				new Audio("audio/tank_fire.wav");

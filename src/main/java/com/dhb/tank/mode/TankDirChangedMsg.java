@@ -82,7 +82,7 @@ public class TankDirChangedMsg extends Msg{
 		if (this.id.equals(TankFrame.INSTANCE.getMainTank().getId())) {
 			return;
 		}
-		Tank t = TankFrame.INSTANCE.findByUUID(this.id);
+		Tank t = TankFrame.INSTANCE.findTankByUUID(this.id);
 		if (t != null) {
 			t.setX(this.x);
 			t.setY(this.y);

@@ -12,41 +12,28 @@ import java.util.UUID;
 
 public class TankDieMsg extends Msg{
 
-	private int x;
-	private int y;
 	private UUID id;
+	//被谁击中
+	private UUID bulledId;
 
-	public TankDieMsg(int x, int y, UUID id) {
-		this.x = x;
-		this.y = y;
+	public TankDieMsg(UUID id,UUID bulledId) {
 		this.id = id;
+		this.bulledId = bulledId;
 	}
 
-	public TankDieMsg(Tank t) {
-		this.x = t.getX();
-		this.y = t.getY();
-		this.id = t.getId();
-	}
 
 	public TankDieMsg() {
 
 	}
 
-	public int getX() {
-		return x;
+	public UUID getBulledId() {
+		return bulledId;
 	}
 
-	public void setX(int x) {
-		this.x = x;
+	public void setBulledId(UUID bulledId) {
+		this.bulledId = bulledId;
 	}
 
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-	}
 
 
 	public UUID getId() {
@@ -60,9 +47,8 @@ public class TankDieMsg extends Msg{
 	@Override
 	public String toString() {
 		return "TankDieMsg{" +
-				"x=" + x +
-				", y=" + y +
-				", id=" + id +
+				"id=" + id +
+				", bulledId=" + bulledId +
 				'}';
 	}
 
@@ -71,7 +57,7 @@ public class TankDieMsg extends Msg{
 		if (this.id.equals(TankFrame.INSTANCE.getMainTank().getId())) {
 			return;
 		}
-		Tank t = TankFrame.INSTANCE.findByUUID(this.id);
+		Tank t = TankFrame.INSTANCE.findTankByUUID(this.id);
 		//如果坦克存在，则将当前坦克移除，并产生爆炸效果对象Explode
 		if (t != null) {
 			TankFrame.INSTANCE.removeTank(t);
@@ -88,10 +74,10 @@ public class TankDieMsg extends Msg{
 		try {
 			baos = new ByteArrayOutputStream();
 			dos = new DataOutputStream(baos);
-			dos.writeInt(x);
-			dos.writeInt(y);
 			dos.writeLong(id.getMostSignificantBits());
 			dos.writeLong(id.getLeastSignificantBits());
+			dos.writeLong(bulledId.getMostSignificantBits());
+			dos.writeLong(bulledId.getLeastSignificantBits());
 			dos.flush();
 			bytes = baos.toByteArray();
 		} catch (IOException e) {
@@ -119,9 +105,8 @@ public class TankDieMsg extends Msg{
 	public void parse(byte[] bytes) {
 		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(bytes));
 		try {
-			this.x = dis.readInt();
-			this.y = dis.readInt();
 			this.id = new UUID(dis.readLong(), dis.readLong());
+			this.bulledId = new UUID(dis.readLong(),dis.readLong());
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

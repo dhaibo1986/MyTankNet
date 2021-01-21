@@ -173,7 +173,7 @@ public class TankJoinMsg extends Msg{
 	@Override
 	public void handle() {
 		if(this.getId().equals(TankFrame.INSTANCE.getMainTank().getId())||
-				TankFrame.INSTANCE.findByUUID(this.getId()) != null) {
+				TankFrame.INSTANCE.findTankByUUID(this.getId()) != null) {
 			return;
 		}
 		System.out.println(this);
