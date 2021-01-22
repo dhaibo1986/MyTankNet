@@ -13,9 +13,22 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TankMsgDecoder extends ByteToMessageDecoder {
+
+	private static final Map<MsgType,Msg> msgMap = new HashMap<>();
+	static{
+		msgMap.put(MsgType.TankJoin,new TankJoinMsg());
+		msgMap.put(MsgType.TankStartMoving,new TankStartMovingMsg());
+		msgMap.put(MsgType.TankStop,new TankStopMsg());
+		msgMap.put(MsgType.TankDirChanged,new TankDirChangedMsg());
+		msgMap.put(MsgType.BulletNew,new BulletNewMsg());
+		msgMap.put(MsgType.TankDie,new TankDieMsg());
+		msgMap.put(MsgType.TankExit,new TankExitMsg());
+	}
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
@@ -32,13 +45,18 @@ public class TankMsgDecoder extends ByteToMessageDecoder {
 		}
 		byte[] bytes = new byte[length];
 		in.readBytes(bytes);
+//		Class localClass = Class.forName("com.dhb.tank.mode."+msgType.toString()+"Msg");
+//		msg = (Msg)localClass.newInstance();
 
 		Msg msg = null;
 		//此处可用反射替换
-//			msg = (Msg) Class.forName(msgType.toString()+"Msg").newInstance();
+		msg = msgMap.get(msgType);
+		msg.parse(bytes);
+		out.add(msg);
 
 
-		switch (msgType) {
+
+		/*switch (msgType) {
 			case TankJoin:
 				msg = new TankJoinMsg();
 				msg.parse(bytes);
@@ -76,7 +94,7 @@ public class TankMsgDecoder extends ByteToMessageDecoder {
 				break;
 			default:
 				break;
-		}
+		}*/
 
 	}
 }
