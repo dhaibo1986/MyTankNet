@@ -14,8 +14,8 @@ public class BulletWallColider implements Colider {
 			Wall wall = (Wall) o2;
 			if (bullet.getRect().intersects(wall.getRect())) {
 				bullet.die();
-				int eX = bullet.getX() + Bullet.WIDTH / 2 - Bullet.WIDTH / 2;
-				int eY = bullet.getY() + Bullet.HEIGHT / 2 - Bullet.HEIGHT / 2;
+				int eX = bullet.getX() + Bullet.WIDTH / 2 - Explode.WIDTH / 2;
+				int eY = bullet.getY() + Bullet.HEIGHT / 2 - Explode.HEIGHT / 2;
 				new Explode(eX, eY, true);
 			}
 		} else if(o2 instanceof Bullet && o1 instanceof Wall) {
