@@ -172,13 +172,13 @@ public class TankJoinMsg extends Msg{
 
 	@Override
 	public void handle() {
-		if(this.getId().equals(TankFrame.INSTANCE.getMainTank().getId())||
-				TankFrame.INSTANCE.findTankByUUID(this.getId()) != null) {
+		if(this.getId().equals(GameModel.getInstance().getMainTank().getId())||
+				GameModel.getInstance().findTankByUUID(this.getId()) != null) {
 			return;
 		}
 		System.out.println(this);
 		Tank t = new Tank(this);
-		TankFrame.INSTANCE.addTank(t);
-		Client.INSTANCE.send(new TankJoinMsg(TankFrame.INSTANCE.getMainTank()));
+		GameModel.getInstance().add(t);
+		Client.INSTANCE.send(new TankJoinMsg(GameModel.getInstance().getMainTank()));
 	}
 }

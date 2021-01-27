@@ -52,7 +52,7 @@ public class Bullet extends GameObject {
 
 	public void die() {
 		this.living = false;
-		TankFrame.INSTANCE.removeBullet(this);
+		GameModel.getInstance().remove(this);
 	}
 
 	public Rectangle getRect() {
@@ -84,7 +84,7 @@ public class Bullet extends GameObject {
 	@Override
 	public void paint(Graphics g) {
 		if (!living) {
-			tf.getBullets().remove(this);
+			GameModel.getInstance().remove(this);
 		}
 		switch (dir) {
 			case LEFT:
@@ -108,7 +108,7 @@ public class Bullet extends GameObject {
 
 	private void move() {
 		if (!living) {
-			TankFrame.INSTANCE.removeBullet(this);
+			GameModel.getInstance().remove(this);
 		}
 		switch (dir) {
 			case LEFT:

@@ -2,6 +2,7 @@ package com.dhb.tank.frame;
 
 import com.dhb.tank.client.Client;
 import com.dhb.tank.comms.Dir;
+import com.dhb.tank.mode.GameModel;
 import com.dhb.tank.mode.Tank;
 import com.dhb.tank.mode.TankDirChangedMsg;
 import com.dhb.tank.mode.TankStartMovingMsg;
@@ -49,7 +50,7 @@ public class MyKeyListener extends KeyAdapter {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		Tank myTank = TankFrame.INSTANCE.getMainTank();
+		Tank myTank = GameModel.getInstance().getMainTank();
 		if (!myTank.isLiving()) {
 			return;
 		}
@@ -73,7 +74,7 @@ public class MyKeyListener extends KeyAdapter {
 				break;
 
 			case KeyEvent.VK_CONTROL:
-				TankFrame.INSTANCE.getMainTank().fire();
+				GameModel.getInstance().getMainTank().fire();
 				break;
 			default:
 				break;
@@ -81,7 +82,7 @@ public class MyKeyListener extends KeyAdapter {
 	}
 
 	private void setMainTankDir() {
-		Tank myTank = TankFrame.INSTANCE.getMainTank();
+		Tank myTank = GameModel.getInstance().getMainTank();
 		Dir dir = myTank.getDir();
 
 		if (!myTank.isLiving()) {

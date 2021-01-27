@@ -1,19 +1,14 @@
 package com.dhb.tank.mode;
 
 import com.dhb.tank.comms.ResourseMgr;
-import com.dhb.tank.frame.TankFrame;
 
 import java.awt.*;
 
 public class Explode extends GameObject {
+	public static int WIDTH = ResourseMgr.getInstance().getExplodes()[0].getWidth();
+	public static int HEIGHT = ResourseMgr.getInstance().getExplodes()[0].getHeight();
 	private int x;
 	private int y;
-
-	public static int WIDTH = ResourseMgr.getInstance().getExplodes()[0].getWidth();
-
-	public static int HEIGHT = ResourseMgr.getInstance().getExplodes()[0].getHeight();
-
-
 	private boolean living = true;
 
 
@@ -23,14 +18,30 @@ public class Explode extends GameObject {
 		this.x = x;
 		this.y = y;
 		this.living = living;
-		TankFrame.INSTANCE.addExplode(this);
+		GameModel.getInstance().add(this);
 	}
 
 	public Explode(Tank t) {
 		this.x = t.getX();
 		this.y = t.getY();
 		this.living = t.isLiving();
-		TankFrame.INSTANCE.addExplode(this);
+		GameModel.getInstance().add(this);
+	}
+
+	public static int getWIDTH() {
+		return WIDTH;
+	}
+
+	public static void setWIDTH(int WIDTH) {
+		Explode.WIDTH = WIDTH;
+	}
+
+	public static int getHEIGHT() {
+		return HEIGHT;
+	}
+
+	public static void setHEIGHT(int HEIGHT) {
+		Explode.HEIGHT = HEIGHT;
 	}
 
 	@Override
@@ -48,24 +59,8 @@ public class Explode extends GameObject {
 		g.drawImage(ResourseMgr.getInstance().getExplodes()[step++], x, y, null);
 		if (step >= ResourseMgr.getInstance().getExplodes().length) {
 			step = 0;
-			TankFrame.INSTANCE.removeExplode(this);
+			GameModel.getInstance().remove(this);
 		}
-	}
-
-	public static int getWIDTH() {
-		return WIDTH;
-	}
-
-	public static void setWIDTH(int WIDTH) {
-		Explode.WIDTH = WIDTH;
-	}
-
-	public static int getHEIGHT() {
-		return HEIGHT;
-	}
-
-	public static void setHEIGHT(int HEIGHT) {
-		Explode.HEIGHT = HEIGHT;
 	}
 
 	public boolean isLiving() {

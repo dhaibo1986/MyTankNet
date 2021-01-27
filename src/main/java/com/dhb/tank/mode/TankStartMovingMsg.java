@@ -79,10 +79,10 @@ public class TankStartMovingMsg extends Msg {
 
 	@Override
 	public void handle() {
-		if (this.id.equals(TankFrame.INSTANCE.getMainTank().getId())) {
+		if (this.id.equals(GameModel.getInstance().getMainTank().getId())) {
 			return;
 		}
-		Tank t = TankFrame.INSTANCE.findTankByUUID(this.id);
+		Tank t = GameModel.getInstance().findTankByUUID(this.id);
 		if (t != null) {
 			t.setMoving(true);
 			t.setX(this.x);

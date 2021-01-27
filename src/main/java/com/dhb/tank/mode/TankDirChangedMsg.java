@@ -1,7 +1,6 @@
 package com.dhb.tank.mode;
 
 import com.dhb.tank.comms.Dir;
-import com.dhb.tank.frame.TankFrame;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -10,7 +9,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
-public class TankDirChangedMsg extends Msg{
+public class TankDirChangedMsg extends Msg {
 
 	private int x;
 	private int y;
@@ -79,10 +78,10 @@ public class TankDirChangedMsg extends Msg{
 
 	@Override
 	public void handle() {
-		if (this.id.equals(TankFrame.INSTANCE.getMainTank().getId())) {
+		if (this.id.equals(GameModel.getInstance().getMainTank().getId())) {
 			return;
 		}
-		Tank t = TankFrame.INSTANCE.findTankByUUID(this.id);
+		Tank t = GameModel.getInstance().findTankByUUID(this.id);
 		if (t != null) {
 			t.setX(this.x);
 			t.setY(this.y);

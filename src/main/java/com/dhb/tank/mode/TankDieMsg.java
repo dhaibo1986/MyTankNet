@@ -1,7 +1,5 @@
 package com.dhb.tank.mode;
 
-import com.dhb.tank.frame.TankFrame;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -52,14 +50,14 @@ public class TankDieMsg extends Msg {
 
 	@Override
 	public void handle() {
-		if (this.id.equals(TankFrame.INSTANCE.getMainTank().getId())) {
+		if (this.id.equals(GameModel.getInstance().getMainTank().getId())) {
 			return;
 		}
-		Tank t = TankFrame.INSTANCE.findTankByUUID(this.id);
+		Tank t = GameModel.getInstance().findTankByUUID(this.id);
 		//如果坦克存在，则将当前坦克移除，并产生爆炸效果对象Explode
 		if (t != null) {
-			TankFrame.INSTANCE.removeTank(t);
-			TankFrame.INSTANCE.addExplode(new Explode(t));
+			GameModel.getInstance().remove(t);
+			GameModel.getInstance().add(new Explode(t));
 		}
 	}
 

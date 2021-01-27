@@ -11,7 +11,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
-public class BulletNewMsg extends Msg{
+public class BulletNewMsg extends Msg {
 
 	private int x;
 	private int y;
@@ -20,7 +20,7 @@ public class BulletNewMsg extends Msg{
 	private UUID tankId;
 	private UUID id;
 
-	public BulletNewMsg(int x, int y, Dir dir, Group group, UUID tankId,UUID id) {
+	public BulletNewMsg(int x, int y, Dir dir, Group group, UUID tankId, UUID id) {
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
@@ -105,12 +105,12 @@ public class BulletNewMsg extends Msg{
 
 	@Override
 	public void handle() {
-		if (this.tankId.equals(TankFrame.INSTANCE.getMainTank().getId())) {
+		if (this.tankId.equals(GameModel.getInstance().getMainTank().getId())) {
 			return;
 		}
-		Bullet b =new Bullet(this.x,this.y,this.dir,this.group,this.tankId,TankFrame.INSTANCE);
+		Bullet b = new Bullet(this.x, this.y, this.dir, this.group, this.tankId, TankFrame.INSTANCE);
 		b.setId(this.id);
-		TankFrame.INSTANCE.addBullet(b);
+		GameModel.getInstance().add(b);
 	}
 
 	@Override
@@ -162,7 +162,7 @@ public class BulletNewMsg extends Msg{
 			this.dir = Dir.values()[dis.readInt()];
 			this.group = Group.values()[dis.readInt()];
 			this.tankId = new UUID(dis.readLong(), dis.readLong());
-			this.id =  new UUID(dis.readLong(), dis.readLong());
+			this.id = new UUID(dis.readLong(), dis.readLong());
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
