@@ -1,5 +1,7 @@
 package com.dhb.tank.mode;
 
+import com.dhb.tank.comms.Dir;
+import com.dhb.tank.comms.Group;
 import com.dhb.tank.cor.ColiderChain;
 
 import java.awt.*;
@@ -7,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 public class GameModel {
@@ -17,11 +20,19 @@ public class GameModel {
 
 	ColiderChain chain = new ColiderChain();
 
+	Random r = new Random();
+	private Tank myTank = new Tank(r.nextInt(1000), r.nextInt(800), Dir.DOWN, false, Group.GOOD);
+
+
 	private List<GameObject> objects = new ArrayList<>();
 	private Map<UUID, Tank> tanks = new HashMap<>();
 	private List<Bullet> bullets = new ArrayList<>();
 	private List<Explode> explodes = new ArrayList<>();
 
+
+	public Tank getMainTank() {
+		return myTank;
+	}
 
 	private void init() {
 
@@ -45,6 +56,15 @@ public class GameModel {
 			Explode explode = (Explode) go;
 			this.explodes.add(explode);
 		}
+	}
+
+	public Bullet findBulletByUUID(UUID id) {
+		for (int i = 0; i < bullets.size(); i++) {
+			if (bullets.get(i).getId().equals(id)) {
+				return bullets.get(i);
+			}
+		}
+		return null;
 	}
 
 	public void remove(GameObject go) {
