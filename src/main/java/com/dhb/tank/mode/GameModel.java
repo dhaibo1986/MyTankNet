@@ -14,28 +14,31 @@ import java.util.UUID;
 
 public class GameModel {
 
-	static{
+	static {
 		GameModel.getInstance().init();
 	}
 
 	ColiderChain chain = new ColiderChain();
-
 	Random r = new Random();
-	private Tank myTank = new Tank(r.nextInt(1000), r.nextInt(800), Dir.DOWN, false, Group.GOOD);
-
-
+	private Tank myTank;
 	private List<GameObject> objects = new ArrayList<>();
 	private Map<UUID, Tank> tanks = new HashMap<>();
 	private List<Bullet> bullets = new ArrayList<>();
 	private List<Explode> explodes = new ArrayList<>();
+	private GameModel() {
 
+	}
+
+	public static GameModel getInstance() {
+		return Sigleton.INSTANCE.getInstance();
+	}
 
 	public Tank getMainTank() {
 		return myTank;
 	}
 
 	private void init() {
-
+		myTank = new Tank(r.nextInt(1000), r.nextInt(800), Dir.DOWN, false, Group.GOOD);
 		//初始化墙
 		new Wall(150, 150, 200, 50);
 		new Wall(550, 150, 200, 50);
@@ -46,13 +49,13 @@ public class GameModel {
 	public void add(GameObject go) {
 		this.objects.add(go);
 		//坦克对象还需要添加到另外一个map数据结构，便于检索
-		if(go instanceof Tank) {
+		if (go instanceof Tank) {
 			Tank tank = (Tank) go;
-			this.tanks.put(tank.getId(),tank);
-		} else if(go instanceof Bullet) {
+			this.tanks.put(tank.getId(), tank);
+		} else if (go instanceof Bullet) {
 			Bullet bullet = (Bullet) go;
 			this.bullets.add(bullet);
-		}else if(go instanceof Explode) {
+		} else if (go instanceof Explode) {
 			Explode explode = (Explode) go;
 			this.explodes.add(explode);
 		}
@@ -67,14 +70,18 @@ public class GameModel {
 		return null;
 	}
 
+	public Tank findTankByUUID(UUID id) {
+		return this.tanks.get(id);
+	}
+
 	public void remove(GameObject go) {
 		this.objects.remove(go);
-		if(go instanceof Tank) {
-			Tank tank = (Tank)go;
+		if (go instanceof Tank) {
+			Tank tank = (Tank) go;
 			this.tanks.remove(tank.getId());
-		}else if(go instanceof Bullet) {
+		} else if (go instanceof Bullet) {
 			this.bullets.remove(go);
-		}else if(go instanceof Explode) {
+		} else if (go instanceof Explode) {
 			this.explodes.remove(go);
 		}
 	}
@@ -82,9 +89,9 @@ public class GameModel {
 	public void paint(Graphics g) {
 		Color c = g.getColor();
 		g.setColor(Color.WHITE);
-		g.drawString("子弹的数量："+bullets.size(),10,60);
-		g.drawString("敌方坦克数量："+tanks.size(),10,75);
-		g.drawString("爆炸数量："+explodes.size(),10,90);
+		g.drawString("子弹的数量：" + bullets.size(), 10, 60);
+		g.drawString("敌方坦克数量：" + tanks.size(), 10, 75);
+		g.drawString("爆炸数量：" + explodes.size(), 10, 90);
 		g.setColor(c);
 
 		//调用每个对象的paint的方法
@@ -102,22 +109,20 @@ public class GameModel {
 
 	}
 
-	public static GameModel getInstance() {
-		return Sigleton.INSTANCE.getInstance();
-	}
 
 	private enum Sigleton {
 		INSTANCE;
 
 		private GameModel instance;
 
-		Sigleton(){
+
+		Sigleton() {
 			instance = new GameModel();
 		}
 
 		public GameModel getInstance() {
 			return instance;
 		}
-	}
 
+	}
 }
