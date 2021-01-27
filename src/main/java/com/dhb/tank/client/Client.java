@@ -9,6 +9,11 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
+/**
+*@author dhaibo1986
+*@description
+*@date  2021/1/21 13:57
+*/
 public class Client {
 
 	public static final Client INSTANCE = new Client();
@@ -30,7 +35,7 @@ public class Client {
 		try {
 			ChannelFuture f = b.group(group).channel(NioSocketChannel.class)
 					.handler(new ClientChannelInitializer())
-					.connect("localhost", 8888);
+					.connect("172.16.20.156", 8888);
 			channel = f.channel();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -38,6 +43,20 @@ public class Client {
 
 		}
 
+	}
+
+	public void stop() {
+		//关闭连接
+		if(null != channel) {
+			if(channel.isActive()){
+				channel.flush();
+				channel.close();
+			}
+		}
+		//关闭客户端线程池
+		if(null != group) {
+			group.shutdownGracefully();
+		}
 	}
 
 
