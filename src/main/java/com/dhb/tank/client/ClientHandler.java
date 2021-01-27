@@ -1,8 +1,7 @@
 package com.dhb.tank.client;
 
-import com.dhb.tank.frame.TankFrame;
+import com.dhb.tank.mode.GameModel;
 import com.dhb.tank.mode.Msg;
-import com.dhb.tank.mode.Tank;
 import com.dhb.tank.mode.TankJoinMsg;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -18,6 +17,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<Msg> {
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		ctx.writeAndFlush(new TankJoinMsg(TankFrame.INSTANCE.getMainTank()));
+		ctx.writeAndFlush(new TankJoinMsg(GameModel.getInstance().getMainTank()));
 	}
 }
