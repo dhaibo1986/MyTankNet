@@ -1,18 +1,21 @@
 package com.dhb.tank.mode;
 
 import com.dhb.tank.client.Client;
-import com.dhb.tank.comms.*;
+import com.dhb.tank.comms.Audio;
+import com.dhb.tank.comms.Dir;
+import com.dhb.tank.comms.Group;
+import com.dhb.tank.comms.ResourseMgr;
 import com.dhb.tank.frame.TankFrame;
 
 import java.awt.*;
 import java.util.Random;
 import java.util.UUID;
 
-public class Tank extends GameObject{
+public class Tank extends GameObject {
 
-	private static final int SPEED = 2;
 	public static final int WIDTH = ResourseMgr.getInstance().getGoodTankU().getWidth();
 	public static final int HEIGHT = ResourseMgr.getInstance().getGoodTankU().getHeight();
+	private static final int SPEED = 2;
 	Rectangle rect = new Rectangle();
 	private Random random = new Random();
 
@@ -35,16 +38,14 @@ public class Tank extends GameObject{
 	//存活状态
 	private boolean living = true;
 
-	private TankFrame tf = null;
 
-	public Tank(int x, int y, Dir dir, boolean moving, Group group,TankFrame tf) {
+	public Tank(int x, int y, Dir dir, boolean moving, Group group) {
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
 		this.moving = moving;
 		this.group = group;
-		this.tf = tf;
-		tf.addTank(this);
+		GameModel.getInstance().add(this);
 
 		rect.x = this.x;
 		rect.y = this.y;
@@ -59,7 +60,7 @@ public class Tank extends GameObject{
 		this.moving = msg.isMoving();
 		this.group = msg.getGroup();
 		this.id = msg.getId();
-		TankFrame.INSTANCE.addTank(this);
+		GameModel.getInstance().add(this);
 
 		rect.x = this.x;
 		rect.y = this.y;
@@ -75,6 +76,14 @@ public class Tank extends GameObject{
 		return SPEED;
 	}
 
+	public static int getWIDTH() {
+		return WIDTH;
+	}
+
+	public static int getHEIGHT() {
+		return HEIGHT;
+	}
+
 	public void die() {
 		this.living = false;
 	}
@@ -88,7 +97,6 @@ public class Tank extends GameObject{
 	public int getHeight() {
 		return HEIGHT;
 	}
-
 
 	@Override
 	public String toString() {
@@ -161,13 +169,13 @@ public class Tank extends GameObject{
 	@Override
 	public void paint(Graphics g) {
 		if (!living) {
-			TankFrame.INSTANCE.removeTank(this);
+			GameModel.getInstance().remove(this);
 			return;
 		}
 		//画出坦克的uuid
 		Color c = g.getColor();
 		g.setColor(Color.YELLOW);
-		g.drawString(id.toString(),this.x,this.y-10);
+		g.drawString(id.toString(), this.x, this.y - 10);
 		g.setColor(c);
 
 		switch (dir) {
@@ -194,23 +202,14 @@ public class Tank extends GameObject{
 		int bX = this.getX() + Tank.WIDTH / 2 - Bullet.WIDTH / 2;
 		int bY = this.getY() + Tank.HEIGHT / 2 - Bullet.HEIGHT / 2;
 
-		Bullet b = new Bullet(bX, bY, this.getDir(), this.getGroup(),this.id,TankFrame.INSTANCE);
-		TankFrame.INSTANCE.addBullet(b);
+		Bullet b = new Bullet(bX, bY, this.getDir(), this.getGroup(), this.id, TankFrame.INSTANCE);
+		GameModel.getInstance().add(b);
 		Client.INSTANCE.send(new BulletNewMsg(b));
 		if (this.getGroup() == Group.GOOD) {
 			new Thread(() -> {
 				new Audio("audio/tank_fire.wav");
 			}).start();
 		}
-	}
-
-
-	public static int getWIDTH() {
-		return WIDTH;
-	}
-
-	public static int getHEIGHT() {
-		return HEIGHT;
 	}
 
 	public Random getRandom() {
@@ -245,13 +244,6 @@ public class Tank extends GameObject{
 		this.living = living;
 	}
 
-	public TankFrame getTf() {
-		return tf;
-	}
-
-	public void setTf(TankFrame tf) {
-		this.tf = tf;
-	}
 
 	private void move() {
 		if (isMoving()) {
@@ -284,6 +276,12 @@ public class Tank extends GameObject{
 		}
 
 		boundsCheck();
+	}
+
+	//增加回退方法
+	public void back() {
+		x = oldX;
+		y = oldY;
 	}
 
 
